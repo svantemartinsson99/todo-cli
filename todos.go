@@ -14,8 +14,10 @@ type Todo struct {
 }
 
 func listTodos(todos []*Todo) {
+
+	fmt.Printf("%-3s|%-10s|%-8s|%-s\n", "ID", "TAG", "PRIORITY", "TEXT")
 	for _, t := range todos {
-		fmt.Println(t.Id, "  |", t.Text, "          |", t.Priority, "    |", t.Tag)
+	fmt.Printf("%-3d|%-10s|%-8d|%-s\n", t.Id, t.Tag, t.Priority, t.Text)
 	}
 }
 
