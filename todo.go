@@ -1,0 +1,47 @@
+package main
+
+import (
+	"os"
+	"log"
+	"strings"
+)
+
+func main() {
+	action, args := parseCliInput()
+	
+	todos := loadTodos()
+
+	switch {
+	case action == "add" || action == "a":
+		todos = addTodo(todos, args)
+	case action == "remove" ||action == "r":
+		removeTodo(todos, args)
+	case action == "list" || action == "l":
+		listTodos(todos, args)
+	default:
+		log.Fatal("Invalid action!")
+	}
+
+	saveTodos(todos)
+}
+
+func parseCliInput() (string, map[string]string) {
+	action := os.Args[1]
+	cliArgs := os.Args[2:]
+	invalidArgMsg := " is skipped since it is not a valid argument format! Argument have the format arg=value!"
+	args := make(map[string]string)
+
+	for _, arg := range cliArgs {
+		if !strings.Contains(arg, "=")  {
+			log.Print(arg, invalidArgMsg)
+			continue
+		}
+		argArr := strings.Split(arg, "=")
+		if len(argArr) != 2 {
+			log.Print(arg, invalidArgMsg)
+			continue;
+		}
+		args[argArr[0]] = argArr[1]
+	}
+	return action, args
+}
