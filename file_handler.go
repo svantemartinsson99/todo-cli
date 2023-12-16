@@ -6,7 +6,9 @@ import (
 	"log"
 )
 
-const TODO_FILE = "todos.dat"
+var todoFile string
+const FILE_FORMAT = ".dat"
+const DEFAULT_TODOS_FILE_NAME = "todos"
 
 func saveTodos(todos []*Todo) {
 	json, err := json.Marshal(todos)
@@ -14,7 +16,7 @@ func saveTodos(todos []*Todo) {
 		log.Fatal("Could not convert todos to JSON! CHANGES ARE NOT SAVED!")
 	}
 
-	f, err := os.Create("./" + TODO_FILE)
+	f, err := os.Create("./" + todoFile)
 	if err != nil {
 		panic(err)
 	}
@@ -26,9 +28,19 @@ func saveTodos(todos []*Todo) {
 }
 
 func loadTodos() []*Todo {
-	data, e := os.ReadFile("./" + TODO_FILE)
+	if todoFile == "" {
+		todoFile = DEFAULT_TODOS_FILE_NAME + FILE_FORMAT 
+	}
+
+	data, e := os.ReadFile("./" + todoFile)
 	if e != nil {
-		log.Fatal("Could not read todos file, error: ", e)
+		if os.IsNotExist(e) {
+			log.Print("No file found with name " + todoFile + ", a new file will be created.")	
+			var todos []*Todo
+			return todos
+		} else {
+			log.Fatal("Could not read todos file, error: ", e)
+		}
 	}
 	var todos []*Todo
 	err := json.Unmarshal(data, &todos)

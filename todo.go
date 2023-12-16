@@ -15,9 +15,9 @@ func main() {
 	case action == "add" || action == "a":
 		todos = addTodo(todos, args)
 	case action == "remove" ||action == "r":
-		removeTodo(todos, args)
+		todos = removeTodo(todos, args)
 	case action == "list" || action == "l":
-		listTodos(todos, args)
+		listTodos(todos)
 	default:
 		log.Fatal("Invalid action!")
 	}
@@ -40,6 +40,10 @@ func parseCliInput() (string, map[string]string) {
 		if len(argArr) != 2 {
 			log.Print(arg, invalidArgMsg)
 			continue;
+		}
+		if argArr[0] == "file" || argArr[0] == "f" {
+			todoFile = argArr[1] + FILE_FORMAT
+			continue
 		}
 		args[argArr[0]] = argArr[1]
 	}

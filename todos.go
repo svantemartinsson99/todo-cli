@@ -13,7 +13,7 @@ type Todo struct {
 	Tag string
 }
 
-func listTodos(todos []*Todo, args map[string]string) {
+func listTodos(todos []*Todo) {
 	for _, t := range todos {
 		fmt.Println(t.Id, "  |", t.Text, "          |", t.Priority, "    |", t.Tag)
 	}
@@ -48,7 +48,7 @@ func addTodo(todos []*Todo, args map[string]string) []*Todo {
 	return append(todos, &t)
 }
 
-func removeTodo(todos []*Todo, args map[string]string) {
+func removeTodo(todos []*Todo, args map[string]string) []*Todo {
 	idStr, ok := args["id"]
 	if !ok {
 		log.Fatal("Could not remove todo, missing required parameter id!")
@@ -61,10 +61,13 @@ func removeTodo(todos []*Todo, args map[string]string) {
 
 	for i, t := range todos {
 		if t.Id == id {
-			todos[i] = todos[len(todos)-1]
+			if i != len(todos) - 1 {
+				todos[i] = todos[len(todos)-1]
+			}
 			todos = todos[:len(todos)-1]
 		}
 	}
+	return todos
 }
 
 func generateId(todos []*Todo) int {
