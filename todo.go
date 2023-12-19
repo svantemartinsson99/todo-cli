@@ -12,20 +12,20 @@ func main() {
 	todos := loadTodos()
 
 	switch {
-	  case action == "add" || action == "a":
-		  todos = addTodo(todos, args)
-	  case action == "remove" ||action == "r":
-		  todos = removeTodo(todos, args)
-	  case action == "list" || action == "l":
-		  listTodos(todos, args)
-    case action == "start" || action == "s":
-      setStatus(todos, args, "In progress")
-    case action == "done" || action == "d":
-      setStatus(todos, args, "Done")
-    case action == "reset" || action == "rs":
-      setStatus(todos, args, "Not started")
-	  default:
-		  log.Fatal("Invalid action!")
+	  	case action == "add" || action == "a":
+		    todos = addTodo(todos, args)
+	  	case action == "remove" ||action == "r":
+		    todos = removeTodo(todos, args)
+	  	case action == "list" || action == "l":
+		    listTodos(todos, args)
+    	case action == "start" || action == "s":
+        setStatus(todos, args, "In progress")
+    	case action == "done" || action == "d":
+        setStatus(todos, args, "Done")
+    	case action == "reset" || action == "rs":
+        setStatus(todos, args, "Not started")
+	  	default:
+			  log.Fatal("Invalid action!")
 	}
 
 	saveTodos(todos)
