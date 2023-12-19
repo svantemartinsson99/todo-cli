@@ -64,7 +64,7 @@ func setStatus(todos []*Todo, args map[string]string, status string) {
     log.Fatal("Missing required parameter id!")
   }
 
-	id, e := strconv.Atoi(idStr)
+  id, e := strconv.Atoi(idStr)
   if e != nil {
     log.Fatal("Invalid id, error: ", e)
   }
@@ -78,55 +78,55 @@ func setStatus(todos []*Todo, args map[string]string, status string) {
 }
 
 func addTodo(todos []*Todo, args map[string]string) []*Todo {
-	var t Todo
-	t.Id = generateId(todos)
+  var t Todo
+  t.Id = generateId(todos)
 
-	text, ok := args["text"]
-	if !ok {
-		log.Fatal("Could not add new todo, missing text parameter!")
-	}
-	t.Text = text
+  text, ok := args["text"]
+  if !ok {
+    log.Fatal("Could not add new todo, missing text parameter!")
+  }
+  t.Text = text
 	
-	t.Priority = 1
-	priority, ok := args["priority"]
-	if ok {
-		priority, err := strconv.Atoi(priority)
-		if err != nil {
-			t.Priority = 1
-			log.Print("Could not set priority, error: ", err, ". Setting priority to 1!")
-		} else {
-			t.Priority = priority
-		}
-	}
+  t.Priority = 1
+  priority, ok := args["priority"]
+  if ok {
+    priority, err := strconv.Atoi(priority)
+    if err != nil {
+      t.Priority = 1
+      log.Print("Could not set priority, error: ", err, ". Setting priority to 1!")
+    } else {
+      t.Priority = priority
+    }
+  }
 
-	tag, ok := args["tag"]
-	if ok {
-		t.Tag= tag
-	}
+  tag, ok := args["tag"]
+  if ok {
+    t.Tag= tag
+  }
   t.Status = "Not started"
-	return append(todos, &t)
+  return append(todos, &t)
 }
 
 func removeTodo(todos []*Todo, args map[string]string) []*Todo {
-	idStr, ok := args["id"]
-	if !ok {
-		log.Fatal("Could not remove todo, missing required parameter id!")
-	}
+  idStr, ok := args["id"]
+  if !ok {
+    log.Fatal("Could not remove todo, missing required parameter id!")
+  } 
 
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		log.Fatal("Provided id is not a valid integer!")
-	}
+  id, err := strconv.Atoi(idStr)
+  if err != nil {
+    log.Fatal("Provided id is not a valid integer!")
+  }
 
-	for i, t := range todos {
-		if t.Id == id {
-			if i != len(todos) - 1 {
-				todos[i] = todos[len(todos)-1]
-			}
-			todos = todos[:len(todos)-1]
-		}
-	}
-	return todos
+  for i, t := range todos {
+    if t.Id == id {
+      if i != len(todos) - 1 {
+        todos[i] = todos[len(todos)-1]
+      }
+      todos = todos[:len(todos)-1]
+    }
+  }
+  return todos
 }
 
 func generateId(todos []*Todo) int {
