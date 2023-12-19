@@ -7,20 +7,20 @@ import (
 )
 
 type Todo struct {
-	Id int
-	Text string
-	Priority int
-	Tag string
+  Id int
+  Text string
+  Priority int
+  Tag string
   Status string
 }
 
 func listTodos(todos []*Todo, args map[string]string) {
   l := filterTodos(todos, args)
 
-	fmt.Printf("%-3s|%-10s|%-8s|%-12s|%-s\n", "ID", "TAG", "PRIORITY", "STATUS", "TEXT")
-	for _, t := range l {
-	  fmt.Printf("%-3d|%-10s|%-8d|%-12s|%-s\n", t.Id, t.Tag, t.Priority, t.Status, t.Text)
-	}
+  fmt.Printf("%-3s|%-10s|%-8s|%-12s|%-s\n", "ID", "TAG", "PRIORITY", "STATUS", "TEXT")
+  for _, t := range l {
+    fmt.Printf("%-3d|%-10s|%-8d|%-12s|%-s\n", t.Id, t.Tag, t.Priority, t.Status, t.Text)
+  }
 }
 
 func filterTodos(todos []*Todo, args map[string]string)  []*Todo {
