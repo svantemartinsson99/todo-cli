@@ -11,14 +11,70 @@ type Todo struct {
 	Text string
 	Priority int
 	Tag string
+  Status string
 }
 
-func listTodos(todos []*Todo) {
+func listTodos(todos []*Todo, args map[string]string) {
+  l := filterTodos(todos, args)
 
-	fmt.Printf("%-3s|%-10s|%-8s|%-s\n", "ID", "TAG", "PRIORITY", "TEXT")
-	for _, t := range todos {
-	fmt.Printf("%-3d|%-10s|%-8d|%-s\n", t.Id, t.Tag, t.Priority, t.Text)
+	fmt.Printf("%-3s|%-10s|%-8s|%-12s|%-s\n", "ID", "TAG", "PRIORITY", "STATUS", "TEXT")
+	for _, t := range l {
+	  fmt.Printf("%-3d|%-10s|%-8d|%-12s|%-s\n", t.Id, t.Tag, t.Priority, t.Status, t.Text)
 	}
+}
+
+func filterTodos(todos []*Todo, args map[string]string)  []*Todo {
+  var l []*Todo
+  var tagFilter string
+  var statusFilter string
+  
+  tag, ok := args["tag"]
+  if ok {
+    tagFilter = tag
+  }
+
+  status, ok := args["status"]
+  if ok {
+    statusFilter = status
+  }
+
+  for _, tPtr := range todos {
+    if tagFilter != "" && tPtr.Tag != tagFilter {
+      continue
+    }
+    if statusFilter != "" && tPtr.Status != statusFilter {
+      continue
+    }
+    l = append(l, tPtr)
+  } 
+  return l
+}
+
+func validateStatus(status string) bool {
+  return status == "Not started" || status == "In progress" || status == "Done"
+}
+
+func setStatus(todos []*Todo, args map[string]string, status string) {
+  if !validateStatus(status) {
+    log.Fatal("Invalid status")
+  }
+
+  idStr, ok := args["id"]
+  if !ok {
+    log.Fatal("Missing required parameter id!")
+  }
+
+	id, e := strconv.Atoi(idStr)
+  if e != nil {
+    log.Fatal("Invalid id, error: ", e)
+  }
+
+  for _, t := range todos {
+    if t.Id == id {
+      t.Status = status
+      continue
+    }
+  }
 }
 
 func addTodo(todos []*Todo, args map[string]string) []*Todo {
@@ -47,6 +103,7 @@ func addTodo(todos []*Todo, args map[string]string) []*Todo {
 	if ok {
 		t.Tag= tag
 	}
+  t.Status = "Not started"
 	return append(todos, &t)
 }
 
