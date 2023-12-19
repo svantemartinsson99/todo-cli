@@ -4,6 +4,7 @@ import (
 	"os"
 	"log"
 	"strings"
+  "fmt"
 )
 
 func main() {
@@ -24,11 +25,23 @@ func main() {
         setStatus(todos, args, "Done")
     	case action == "reset" || action == "rs":
         setStatus(todos, args, "Not started")
+       case action == "help" || action == "h":
+        printHelp()
 	  	default:
 			  log.Fatal("Invalid action!")
 	}
 
 	saveTodos(todos)
+}
+
+func printHelp() {
+  fmt.Printf("%-12s| %-s\n\n", "Command", "Description")
+  fmt.Printf("%-12s| %-s\n", "add or a", "Adds a new todo. Arguments: text, priority (optional), tag (optional)")
+  fmt.Printf("%-12s| %-s\n", "remove or r", "Removes a todo. Argument: id")
+  fmt.Printf("%-12s| %-s\n", "list or l", "Lists todos. Can also filter with arguments. Arguments: tag (optional), status (optional)")
+  fmt.Printf("%-12s| %-s\n", "start or s", "Sets status to ''In progress''. No arguments.")
+  fmt.Printf("%-12s| %-s\n", "done or d", "Sets status to ''Done''. No arguments.")
+  fmt.Printf("%-12s| %-s\n", "reset or rs", "Sets status to ''Not started''. No arguments.")
 }
 
 func parseCliInput() (string, map[string]string) {

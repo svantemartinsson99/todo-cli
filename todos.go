@@ -130,12 +130,12 @@ func removeTodo(todos []*Todo, args map[string]string) []*Todo {
 }
 
 func generateId(todos []*Todo) int {
-	id := 1
-	for i, t := range todos {
-		if t.Id >= i {
-			id = t.Id + 1
-		}
-	}
-	return id
+  id := 1
+  for i, t := range todos {
+    if t.Id >= i {
+      id = t.Id + 1
+    }
+  }
+  return id
 }
 
