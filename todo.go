@@ -1,18 +1,18 @@
 package main
 
 import (
-	"os"
-	"log"
-	"strings"
+  "os"
+  "log"
+  "strings"
   "fmt"
 )
 
 func main() {
-	action, args := parseCliInput()
+  action, args := parseCliInput()
 	
-	todos := loadTodos()
+  todos := loadTodos()
 
-	switch {
+  switch {
     case action == "add" || action == "a":
       todos = addTodo(todos, args)
     case action == "remove" ||action == "r":

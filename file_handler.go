@@ -15,8 +15,12 @@ func saveTodos(todos []*Todo) {
   if err != nil {
     log.Fatal("Could not convert todos to JSON! CHANGES ARE NOT SAVED!")
   }
+  homeDir, e := os.UserHomeDir()
+  if e != nil {
+    log.Fatal("Could not get users home directory. Needed to save todos to file. Error: ", e)
+  }
 
-  f, err := os.Create("./" + todoFile)
+  f, err := os.Create(homeDir + "/.todo_cli/" + todoFile)
   if err != nil {
     panic(err)
   }
@@ -32,10 +36,18 @@ func loadTodos() []*Todo {
     todoFile = DEFAULT_TODOS_FILE_NAME + FILE_FORMAT 
   }
 
-  data, e := os.ReadFile("./" + todoFile)
+  homeDir, e := os.UserHomeDir()
+  if e != nil {
+    log.Fatal("Could not get users home directory. Needed to save todos to file. Error: ", e)
+  }
+
+  data, e := os.ReadFile(homeDir + "/.todo_cli/" + todoFile)
   if e != nil {
     if os.IsNotExist(e) {
       log.Print("No file found with name " + todoFile + ", a new file will be created.")	
+      if e := os.MkdirAll(homeDir + "/.todo_cli", os.ModePerm); e != nil {
+        log.Fatal("Could not create directory to save todos file! Error: ", e)
+      }
       var todos []*Todo
       return todos
     } else {
