@@ -25,6 +25,8 @@ func main() {
       setStatus(todos, args, "Done")
     case action == "reset" || action == "rs":
       setStatus(todos, args, "Not started")
+    case action == "update" || action == "u":
+      updateTodo(todos, args)
     case action == "help" || action == "h":
       printHelp()
     default:

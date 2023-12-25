@@ -4,6 +4,7 @@ import (
   "strconv"
   "log"
   "fmt"
+  "errors"
 )
 
 type Todo struct {
@@ -54,6 +55,51 @@ func validateStatus(status string) bool {
   return status == "Not started" || status == "In progress" || status == "Done"
 }
 
+func updateTodo(todos []*Todo, args map[string]string) {
+  idStr, ok := args["id"]
+  if !ok {
+    log.Fatal("Missing required parameter id")
+  }
+  id, e := strconv.Atoi(idStr)
+  if e != nil {
+    log.Fatal("Invalid id, error: ", e)
+  }
+
+  todo, e := getTodo(id, todos)
+  if e != nil {
+    log.Fatal("Could not get todo, error: ", e)
+  }
+
+  text, ok := args["text"]
+  if ok {
+    todo.Text = text
+  }
+
+  tag, ok := args["tag"]
+  if ok {
+    todo.Tag = tag
+  }
+
+  prioStr, ok := args["priority"]
+  if ok {
+    prio, e := strconv.Atoi(prioStr)
+    if e == nil {
+      todo.Priority = prio
+    } else {
+      log.Print("Priority value is invalid, will not be updated. Error: ", e)
+    }
+  }
+}
+
+func getTodo(id int, todos []*Todo) (*Todo, error) {
+  for _, t := range todos {
+    if t.Id == id {
+      return t, nil
+    }
+  }
+  return nil, errors.New("Could not find any todo with id " + strconv.Itoa(id))
+}
+
 func setStatus(todos []*Todo, args map[string]string, status string) {
   if !validateStatus(status) {
     log.Fatal("Invalid status")
@@ -69,12 +115,11 @@ func setStatus(todos []*Todo, args map[string]string, status string) {
     log.Fatal("Invalid id, error: ", e)
   }
 
-  for _, t := range todos {
-    if t.Id == id {
-      t.Status = status
-      continue
-    }
+  todo, e := getTodo(id, todos)
+  if e != nil {
+    log.Fatal("Could not find todo with id " + idStr + ". Error: ", e)
   }
+  todo.Status = status
 }
 
 func addTodo(todos []*Todo, args map[string]string) []*Todo {
