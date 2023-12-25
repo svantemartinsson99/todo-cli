@@ -45,7 +45,13 @@ func printHelp() {
 }
 
 func parseCliInput() (string, map[string]string) {
+
+  if len(os.Args) < 2 {
+    action := "l"
+    return action, make(map[string]string, 0)
+  }
   action := os.Args[1]
+
   cliArgs := os.Args[2:]
   invalidArgMsg := " is skipped since it is not a valid argument format! Argument have the format arg=value!"
   args := make(map[string]string)
