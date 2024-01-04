@@ -40,6 +40,7 @@ func printHelp() {
   fmt.Printf("%-12s| %-s\n\n", "Command", "Description")
   fmt.Printf("%-12s| %-s\n", "add or a", "Adds a new todo. Arguments: text, priority (optional), tag (optional)")
   fmt.Printf("%-12s| %-s\n", "remove or r", "Removes a todo. Argument: id")
+  fmt.Printf("%-12s| %-s\n", "update or r", "Updates an existing todo. Arguments: text, tag and priority. All optional, but without any argument, nothing will be updates.")
   fmt.Printf("%-12s| %-s\n", "list or l", "Lists todos. Can also filter with arguments. Arguments: tag (optional), status (optional)")
   fmt.Printf("%-12s| %-s\n", "start or s", "Sets status to ''In progress''. No arguments.")
   fmt.Printf("%-12s| %-s\n", "done or d", "Sets status to ''Done''. No arguments.")
