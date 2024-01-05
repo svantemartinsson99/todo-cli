@@ -5,6 +5,7 @@ import (
   "log"
   "fmt"
   "errors"
+  "github.com/fatih/color"
 )
 
 type Todo struct {
@@ -17,10 +18,17 @@ type Todo struct {
 
 func listTodos(todos []*Todo, args map[string]string) {
   l := filterTodos(todos, args)
+  var c func(a ...interface{}) (string) 
 
   fmt.Printf("%-3s|%-10s|%-8s|%-12s|%-s\n", "ID", "TAG", "PRIORITY", "STATUS", "TEXT")
   for _, t := range l {
-    fmt.Printf("%-3d|%-10s|%-8d|%-12s|%-s\n", t.Id, t.Tag, t.Priority, t.Status, t.Text)
+    c = color.New(color.Bold, color.FgRed).SprintFunc()
+    if t.Status == "Done" {
+      c = color.New(color.Bold, color.FgGreen).SprintFunc()
+    } else if t.Status == "In progress" {
+      c = color.New(color.Bold, color.FgYellow).SprintFunc()
+    }
+    fmt.Fprintf(color.Output, "%-3d|%-10s|%-8d|%-26s|%-s\n", t.Id, t.Tag, t.Priority, c(t.Status), t.Text)
   }
 }
 
