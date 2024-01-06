@@ -14,6 +14,7 @@ type Todo struct {
   Priority int
   Tag string
   Status string
+  NextTodo int
 }
 
 func listTodos(todos []*Todo, args map[string]string) {
@@ -29,6 +30,33 @@ func listTodos(todos []*Todo, args map[string]string) {
       c = color.New(color.Bold, color.FgYellow).SprintFunc()
     }
     fmt.Fprintf(color.Output, "%-3d|%-10s|%-8d|%-26s|%-s\n", t.Id, t.Tag, t.Priority, c(t.Status), t.Text)
+  }
+}
+
+func printChainedTodos(todos []*Todo, args map[string]string) {
+  idStr, ok := args["id"]
+  if !ok {
+    log.Fatal("id parameter required!")
+  }
+
+  id, e := strconv.Atoi(idStr)
+  if e != nil {
+    log.Fatal("Invalid integer value passed as id parameter! Error: ", e)
+  }
+
+  var nextTodoId int
+  nextTodo, e := getTodo(id, todos)
+  for {
+    fmt.Printf("(%d) %s", nextTodo.Id, nextTodo.Text)
+    nextTodoId = nextTodo.NextTodo
+    if nextTodoId == -1 {
+      break
+    }
+    nextTodo, e = getTodo(nextTodoId, todos)
+    if e != nil {
+      log.Fatal("Found next todo id but could not find the actual todo! Error: ", e)
+    }
+    fmt.Print(" => ")
   }
 }
 
@@ -97,6 +125,17 @@ func updateTodo(todos []*Todo, args map[string]string) {
       log.Print("Priority value is invalid, will not be updated. Error: ", e)
     }
   }
+
+  nextTodoStr, ok := args["next"]
+  if ok {
+    nextTodo, e := strconv.Atoi(nextTodoStr)
+    if e != nil {
+      log.Print("next parameter value is not a valid integer, will skip next parameter.")
+    } else {
+      todo.NextTodo = nextTodo
+    }
+  }
+
 }
 
 func getTodo(id int, todos []*Todo) (*Todo, error) {
@@ -156,6 +195,18 @@ func addTodo(todos []*Todo, args map[string]string) []*Todo {
   if ok {
     t.Tag= tag
   }
+
+  t.NextTodo = -1
+  nextTodoStr, ok := args["next"]
+  if ok {
+    nextTodo, e := strconv.Atoi(nextTodoStr)
+    if e != nil {
+      log.Print("next parameter value is not a valid integer, will skip next parameter.")
+    } else {
+      t.NextTodo = nextTodo
+    }
+  }
+
   t.Status = "Not started"
   return append(todos, &t)
 }

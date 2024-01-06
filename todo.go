@@ -29,6 +29,8 @@ func main() {
       updateTodo(todos, args)
     case action == "help" || action == "h":
       printHelp()
+    case action == "print-chain" || action == "pc":
+      printChainedTodos(todos, args)
     default:
       log.Fatal("Invalid action!")
   }
@@ -45,6 +47,7 @@ func printHelp() {
   fmt.Printf("%-12s| %-s\n", "start or s", "Sets status to ''In progress''. No arguments.")
   fmt.Printf("%-12s| %-s\n", "done or d", "Sets status to ''Done''. No arguments.")
   fmt.Printf("%-12s| %-s\n", "reset or rs", "Sets status to ''Not started''. No arguments.")
+  fmt.Printf("%-12s| %-s\n", "print-chained or pc", "Visualizes all the todos that are chained after a specific todo. Arguments: id")
 }
 
 func parseCliInput() (string, map[string]string) {
